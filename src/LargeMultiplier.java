@@ -17,11 +17,7 @@ public class LargeMultiplier {
         rem = ans / 10;
         buff = buff.append(ans % 10);
       }
-      while (rem != 0) {
-        buff.append(rem % 10);
-        rem /= 10;
-      }
-      adds.add(buff.reverse().toString());
+      adds.add(rem + buff.reverse().toString());
     }
     return addAfterPadding(adds);
   }
@@ -44,42 +40,22 @@ public class LargeMultiplier {
         }
         sum += dig;
       }
-      if (available) {
-        col++;
-        ans.append(sum % 10);
-        rem = sum / 10;
-      }
+      col++;
+      ans.append(sum % 10);
+      rem = sum / 10;
     }
-    while (rem != 0) {
-      ans.append(rem % 10);
-      rem /= 10;
-    }
-    return stripZero(ans.reverse().toString());
-  }
 
-  private static String stripZero(String s) {
-    StringBuffer buf = new StringBuffer();
-    boolean digSeen = false;
-    for (int i = 0; i < s.length(); i++) {
-      char c = s.charAt(i);
-      if (!digSeen && c == '0') {
-        continue;
-      }
-      digSeen = true;
-      buf.append(c);
-    }
-    if (!digSeen) {
-      return "0";
-    } else {
-      return buf.toString();
-    }
+    String mult = rem + ans.reverse().toString();
+    String sub = mult.replaceFirst("^(0*)", "");
+
+    return sub.length() > 0 ? sub : "0";
   }
 
   public static void main(String[] args) {
-    for (int i = 100; i < 1000; i++) {
-      for (int j = 100; j < 1000; j++) {
-        BigInteger num1 = generateInt(i);
-        BigInteger num2 = generateInt(j);
+    for (int i = 10; i < 500; i++) {
+      for (int j = 10; j < 500; j++) {
+        BigInteger num1 = new BigInteger(i, new Random());
+        BigInteger num2 = new BigInteger(j, new Random());
         BigInteger multiply = num1.multiply(num2);
         String multiply1 = LargeMultiplier.multiply(num1.toString(), num2.toString());
         if (!multiply.toString().equals(multiply1)) {
@@ -87,9 +63,5 @@ public class LargeMultiplier {
         }
       }
     }
-  }
-
-  private static BigInteger generateInt(int len) {
-    return new BigInteger(len, new Random());
   }
 }
